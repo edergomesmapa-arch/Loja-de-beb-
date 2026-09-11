@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagamento não concluído — Baby Aconchego</title>
+<style>
+  body{font-family:'Quicksand', sans-serif; background:#FBF6EE; color:#4A3728; display:flex; align-items:center; justify-content:center; min-height:100vh; text-align:center; padding:24px;}
+  .box{max-width:480px;}
+  h1{font-family:'Fraunces', serif; margin-bottom:12px;}
+  a{color:#87A87E; font-weight:700;}
+</style>
+</head>
+<body>
+  <div class="box">
+    <h1>😕 Não foi possível concluir o pagamento</h1>
+    <p>Algo deu errado no pagamento. Você pode tentar novamente ou falar com a gente pelo e-mail da loja.</p>
+    <p style="margin-top:20px;"><a href="/">← Voltar para a loja</a></p>
+  </div>
+</body>
+</html>
