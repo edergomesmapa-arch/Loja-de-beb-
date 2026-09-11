@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagamento aprovado — Baby Aconchego</title>
+<style>
+  body{font-family:'Quicksand', sans-serif; background:#FBF6EE; color:#4A3728; display:flex; align-items:center; justify-content:center; min-height:100vh; text-align:center; padding:24px;}
+  .box{max-width:480px;}
+  h1{font-family:'Fraunces', serif; margin-bottom:12px;}
+  a{color:#87A87E; font-weight:700;}
+</style>
+</head>
+<body>
+  <div class="box">
+    <h1>🎉 Pagamento aprovado!</h1>
+    <p>Obrigada por comprar na Baby Aconchego. Em breve entraremos em contato para combinar a entrega.</p>
+    <p style="margin-top:20px;"><a href="/">← Voltar para a loja</a></p>
+  </div>
+</body>
+</html>
