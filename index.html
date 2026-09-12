@@ -872,33 +872,18 @@
     document.getElementById('cartOverlay').classList.toggle('open', open);
   }
 
-  async function finalizarCompra(){
-    const btn = document.getElementById('checkoutBtn');
-    btn.disabled = true;
-    btn.textContent = 'Gerando pagamento...';
-
-    try{
-      const resp = await fetch('/.netlify/functions/create-preference', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: cart })
-      });
-      const data = await resp.json();
-
-      if(!resp.ok || !data.init_point){
-        throw new Error(data.error ? JSON.stringify(data.error) : 'Erro ao gerar pagamento');
-      }
-
-      localStorage.removeItem('babyAconchegoCart');
-      window.location.href = data.init_point;
-
-    } catch(err){
-      alert('Não foi possível iniciar o pagamento. Verifique se a Chave de Acesso do Mercado Pago (MP_ACCESS_TOKEN) está configurada no Netlify. Detalhe: ' + err.message);
-      btn.disabled = false;
-      btn.textContent = 'Finalizar compra (Pix / Cartão)';
-    }
-  }
-
+  <div id="enderecoForm" style="margin-top:16px; padding-top:16px; border-top:1px solid var(--line);">
+  <h4 style="margin-bottom:8px;">Endereço de entrega</h4>
+  <input type="text" id="end-nome" placeholder="Nome completo" style="width:100%; margin-bottom:8px; padding:8px;">
+  <input type="text" id="end-cep" placeholder="CEP" style="width:100%; margin-bottom:8px; padding:8px;">
+  <input type="text" id="end-rua" placeholder="Rua/Avenida" style="width:100%; margin-bottom:8px; padding:8px;">
+  <input type="text" id="end-numero" placeholder="Número" style="width:100%; margin-bottom:8px; padding:8px;">
+  <input type="text" id="end-complemento" placeholder="Complemento (opcional)" style="width:100%; margin-bottom:8px; padding:8px;">
+  <input type="text" id="end-bairro" placeholder="Bairro" style="width:100%; margin-bottom:8px; padding:8px;">
+  <input type="text" id="end-cidade" placeholder="Cidade" style="width:100%; margin-bottom:8px; padding:8px;">
+  <input type="text" id="end-estado" placeholder="Estado (UF)" style="width:100%; margin-bottom:8px; padding:8px;">
+  <input type="text" id="end-telefone" placeholder="Telefone/WhatsApp" style="width:100%; margin-bottom:8px; padding:8px;">
+</div>
   renderCart();
 </script>
 
