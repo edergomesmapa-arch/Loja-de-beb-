@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+          
+   <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -233,6 +234,22 @@
   }
   .checkout-btn:disabled{opacity:0.5; cursor:not-allowed;}
   .cart-note{font-size:0.75rem; color:var(--cocoa-soft); margin-top:10px; text-align:center;}
+
+  #enderecoForm input{
+    border:1px solid var(--line);
+    border-radius:10px;
+    font-family:'Quicksand', sans-serif;
+    font-size:0.9rem;
+    background:var(--white);
+    color:var(--cocoa);
+  }
+  #enderecoForm input:focus{
+    outline:2px solid var(--sage-deep);
+    outline-offset:1px;
+  }
+  #enderecoForm h4{
+    font-size:0.95rem;
+  }
 
   .hero{
     padding:64px 0 40px;
@@ -549,6 +566,20 @@
       <span>Total</span>
       <span id="cartTotal">R$ 0,00</span>
     </div>
+
+    <div id="enderecoForm" style="margin-top:4px; margin-bottom:16px; padding-top:16px; border-top:1px solid var(--line);">
+      <h4 style="margin-bottom:8px;">Endereço de entrega</h4>
+      <input type="text" id="end-nome" placeholder="Nome completo" style="width:100%; margin-bottom:8px; padding:8px;">
+      <input type="text" id="end-cep" placeholder="CEP" style="width:100%; margin-bottom:8px; padding:8px;">
+      <input type="text" id="end-rua" placeholder="Rua/Avenida" style="width:100%; margin-bottom:8px; padding:8px;">
+      <input type="text" id="end-numero" placeholder="Número" style="width:100%; margin-bottom:8px; padding:8px;">
+      <input type="text" id="end-complemento" placeholder="Complemento (opcional)" style="width:100%; margin-bottom:8px; padding:8px;">
+      <input type="text" id="end-bairro" placeholder="Bairro" style="width:100%; margin-bottom:8px; padding:8px;">
+      <input type="text" id="end-cidade" placeholder="Cidade" style="width:100%; margin-bottom:8px; padding:8px;">
+      <input type="text" id="end-estado" placeholder="Estado (UF)" style="width:100%; margin-bottom:8px; padding:8px;">
+      <input type="text" id="end-telefone" placeholder="Telefone/WhatsApp" style="width:100%; margin-bottom:8px; padding:8px;">
+    </div>
+
     <button class="btn checkout-btn" id="checkoutBtn" onclick="finalizarCompra()" disabled>
       Finalizar compra (Pix / Cartão)
     </button>
@@ -872,20 +903,53 @@
     document.getElementById('cartOverlay').classList.toggle('open', open);
   }
 
-  <div id="enderecoForm" style="margin-top:16px; padding-top:16px; border-top:1px solid var(--line);">
-  <h4 style="margin-bottom:8px;">Endereço de entrega</h4>
-  <input type="text" id="end-nome" placeholder="Nome completo" style="width:100%; margin-bottom:8px; padding:8px;">
-  <input type="text" id="end-cep" placeholder="CEP" style="width:100%; margin-bottom:8px; padding:8px;">
-  <input type="text" id="end-rua" placeholder="Rua/Avenida" style="width:100%; margin-bottom:8px; padding:8px;">
-  <input type="text" id="end-numero" placeholder="Número" style="width:100%; margin-bottom:8px; padding:8px;">
-  <input type="text" id="end-complemento" placeholder="Complemento (opcional)" style="width:100%; margin-bottom:8px; padding:8px;">
-  <input type="text" id="end-bairro" placeholder="Bairro" style="width:100%; margin-bottom:8px; padding:8px;">
-  <input type="text" id="end-cidade" placeholder="Cidade" style="width:100%; margin-bottom:8px; padding:8px;">
-  <input type="text" id="end-estado" placeholder="Estado (UF)" style="width:100%; margin-bottom:8px; padding:8px;">
-  <input type="text" id="end-telefone" placeholder="Telefone/WhatsApp" style="width:100%; margin-bottom:8px; padding:8px;">
-</div>
+  async function finalizarCompra(){
+    const nome = document.getElementById('end-nome').value.trim();
+    const cep = document.getElementById('end-cep').value.trim();
+    const rua = document.getElementById('end-rua').value.trim();
+    const numero = document.getElementById('end-numero').value.trim();
+    const complemento = document.getElementById('end-complemento').value.trim();
+    const bairro = document.getElementById('end-bairro').value.trim();
+    const cidade = document.getElementById('end-cidade').value.trim();
+    const estado = document.getElementById('end-estado').value.trim();
+    const telefone = document.getElementById('end-telefone').value.trim();
+
+    if(!nome || !cep || !rua || !numero || !bairro || !cidade || !estado || !telefone){
+      alert('Por favor, preencha todos os campos do endereço de entrega.');
+      return;
+    }
+
+    const endereco = { nome, cep, rua, numero, complemento, bairro, cidade, estado, telefone };
+
+    const btn = document.getElementById('checkoutBtn');
+    btn.disabled = true;
+    btn.textContent = 'Gerando pagamento...';
+
+    try{
+      const resp = await fetch('/.netlify/functions/create-preference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: cart, endereco })
+      });
+      const data = await resp.json();
+
+      if(!resp.ok || !data.init_point){
+        throw new Error(data.error ? JSON.stringify(data.error) : 'Erro desconhecido');
+      }
+
+      localStorage.setItem('babyAconchegoEndereco', JSON.stringify(endereco));
+      localStorage.removeItem('babyAconchegoCart');
+      window.location.href = data.init_point;
+    } catch(err){
+      alert('Não foi possível iniciar o pagamento. Tente novamente.');
+      btn.disabled = false;
+      btn.textContent = 'Finalizar compra (Pix / Cartão)';
+    }
+  }
+
   renderCart();
 </script>
 
 </body>
 </html>
+ 
